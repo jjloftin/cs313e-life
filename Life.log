@@ -1,0 +1,29 @@
+commit 5d5d6977d8d625aefe04350bb84ad7ad5769d81c
+Author: JJ <johnloftin99@gmail.com>
+Date:   Tue Dec 2 07:11:42 2014 -0600
+
+    Pretty much done
+
+commit 443f2105d83ca50e2832bbe818910cb4c51a3e5a
+Author: JJ <johnloftin99@gmail.com>
+Date:   Tue Dec 2 04:47:36 2014 -0600
+
+    Fixed #6
+
+commit bbd0b46a8919e2e2d163a9cf3c7e8e0ed99db59a
+Author: JJ <johnloftin99@gmail.com>
+Date:   Tue Dec 2 02:40:24 2014 -0600
+
+    Fixed #5
+
+commit 35138a0d886a6c25d77a39d2fb7a439c73a18c0b
+Author: JJ <johnloftin99@gmail.com>
+Date:   Tue Dec 2 01:26:55 2014 -0600
+
+    Fixed #4
+
+commit ff25868e01c5ec480cdac1fb5e4c6da806ee0702
+Author: JJ <johnloftin99@gmail.com>
+Date:   Mon Nov 24 04:45:26 2014 -0600
+
+    Fixed #1,2

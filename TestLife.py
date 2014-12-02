@@ -130,7 +130,7 @@ class TestLife(TestCase):
     
     assert str(l) == '**\n**'
     
-   #giveNeighbhors#
+   #giveNeighbors#
   def test_life_40(self):
     l = Life(2,2)
     c1 = ConwayCell(True)
@@ -142,7 +142,7 @@ class TestLife(TestCase):
     l.addCell(1,0,c3)
     l.addCell(1,1,c4)
     
-    assert l.giveNeighbhors(0,0) == 0
+    assert l.liveNeighbors(0,0) == 0
   
   def test_life_41(self):
     l = Life(2,2)
@@ -157,7 +157,7 @@ class TestLife(TestCase):
     
     l.countLives()
     
-    assert l.giveNeighbhors(0,0) == 1
+    assert l.liveNeighbors(0,0) == 1
     
   def test_life_42(self):
     l = Life(2,2)
@@ -172,7 +172,7 @@ class TestLife(TestCase):
     
     l.countLives()
     
-    assert l.giveNeighbhors(1,1) == 1
+    assert l.liveNeighbors(1,1) == 1
   #============#
   #AbstractCell
   #============#

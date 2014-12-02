@@ -25,6 +25,9 @@ class Life:
     self.neighbhors = 0
     
   def addCell(self,i,j, cell):
+    '''
+    Add a cell to the Life grid
+    '''
     assert isinstance(cell,AbstractCell)
     self.world[i+1][j+1] = cell  
       
@@ -103,6 +106,9 @@ class Life:
         self.cellExecute(i,j)
         
   def getPopulation(self):
+    '''
+    Return population of live cells in Life grid
+    '''
     n = 0
     for i in range(len(self.world)):
       for j in range(len(self.world[i])):

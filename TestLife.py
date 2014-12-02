@@ -176,6 +176,98 @@ class TestLife(TestCase):
     l.cellExecute(1,1)
     
     assert l.liveNeighbors() == 1
+  
+  #cellExecute#
+  def test_life_45(self):
+    l = Life(2,2)
+    c1 = ConwayCell(True)
+    c2 = ConwayCell(True)
+    c3 = ConwayCell(True)
+    c4 = ConwayCell(False)
+    
+    l.addCell(0,0,c1)
+    l.addCell(0,1,c2)
+    l.addCell(1,0,c3)
+    l.addCell(1,1,c4)
+    
+    l.countLives()
+    l.cellExecute(2,2)
+    
+    assert c4.getAlive()
+  def test_life_46(self):
+    l = Life(2,2)
+    c1 = FredkinCell(True)
+    c2 = FredkinCell(True)
+    c3 = FredkinCell(True)
+    c4 = FredkinCell(False)
+    
+    l.addCell(0,0,c1)
+    l.addCell(0,1,c2)
+    l.addCell(1,0,c3)
+    l.addCell(1,1,c4)
+    
+    l.countLives()
+    l.cellExecute(2,2)
+    
+    assert not c4.getAlive()
+  def test_life_47(self):
+    l = Life(2,2)
+    c1 = FredkinCell(True)
+    c2 = FredkinCell(True)
+    c3 = FredkinCell(True)
+    c4 = FredkinCell(False)
+    
+    l.addCell(0,0,c1)
+    l.addCell(0,1,c2)
+    l.addCell(1,0,c3)
+    l.addCell(1,1,c4)
+    
+    l.countLives()
+    l.cellExecute(1,1)
+    
+    assert not c1.getAlive()
+   
+  #getPopulation# 
+  def test_life_48(self):
+    l = Life(2,2)
+    c1 = FredkinCell(True)
+    c2 = FredkinCell(True)
+    c3 = FredkinCell(True)
+    c4 = FredkinCell(False)
+    
+    l.addCell(0,0,c1)
+    l.addCell(0,1,c2)
+    l.addCell(1,0,c3)
+    l.addCell(1,1,c4)
+    
+    assert l.getPopulation() == 3
+  def test_life_49(self):
+    l = Life(2,2)
+    c1 = FredkinCell(True)
+    c2 = FredkinCell(False)
+    c3 = FredkinCell(True)
+    c4 = FredkinCell(False)
+    
+    l.addCell(0,0,c1)
+    l.addCell(0,1,c2)
+    l.addCell(1,0,c3)
+    l.addCell(1,1,c4)
+    
+    assert l.getPopulation() == 2
+    
+  def test_life_50(self):
+    l = Life(2,2)
+    c1 = FredkinCell(False)
+    c2 = FredkinCell(False)
+    c3 = FredkinCell(False)
+    c4 = FredkinCell(False)
+    
+    l.addCell(0,0,c1)
+    l.addCell(0,1,c2)
+    l.addCell(1,0,c3)
+    l.addCell(1,1,c4)
+    
+    assert l.getPopulation() == 0
   #============#
   #AbstractCell
   #============#
@@ -218,6 +310,13 @@ class TestLife(TestCase):
     k = AbstractCell()
     assert k.neighbors == []
   
+  #getAlive#
+  def test_life_43(self):
+    k = AbstractCell(True)
+    assert k.getAlive()
+  def test_life_44(self):
+    k = AbstractCell()
+    assert not k.getAlive()
   #str#
   def test_life_20(self):
     k = AbstractCell()
@@ -339,6 +438,7 @@ class TestLife(TestCase):
   def test_life_39(self):
     c = ConwayCell(True)
     assert str(c) == '*'
+
 
 #====#
 #main#

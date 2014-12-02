@@ -101,6 +101,15 @@ class Life:
     for i in range(1,len(self.world)-1):
       for j in range(1,len(self.world[i]) - 1):
         self.cellExecute(i,j)
+        
+  def getPopulation(self):
+    n = 0
+    for i in range(len(self.world)):
+      for j in range(len(self.world[i])):
+        if isinstance(self.world[i][j],AbstractCell):
+          if(self.world[i][j].getAlive()):
+            n+=1
+    return n
 
   def __str__(self):
     '''
@@ -113,7 +122,7 @@ class Life:
         s += str(self.world[i][j])
       if(i < len(self.world) - 2): 
         s += '\n'
-    return s
+    return s.strip()
   
 class AbstractCell:
 
@@ -209,3 +218,4 @@ class FredkinCell(AbstractCell):
         return str('+')
     else:
       return '-'
+      

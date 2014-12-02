@@ -4,18 +4,27 @@ class Life:
   '''
   #Contains cells and tells them to evolve. Generally Conway and Fredkin Cells but can acommodate non-standard  cell structures.
   Data: world - a grid that contains live and dead cells. 
+        livesCount - a grid equivalent in size to world that contains number of live neighbors around each cell (tailored to fit each cells rules for live neighbors)
+        neighbors - a variable to keep track of the number of lives neighbors around a particular cell in question 
   '''
   def __init__(self,i,j):
     '''
     Initialize the environment for cells to evolve in. 
     Initialize a grid equal to the size of the environment for cells to count lives.
     '''
+    self.world = []
+    self.livesCount = []
+    for k in range(i+2):
+      self.world.append([])
+      self.livesCount.append([])
+      for l in range(j+2):
+        self.world[k].append('')
+        self.livesCount[k].append(0)
     
-    self.world = (i+2)*[(j+2)*['']]
-    self.livesCount = (i+2)*[(j+2)*[0]]
+
     self.neighbhors = 0
     
-  def addCell(self,cell,i,j):
+  def addCell(self,i,j, cell):
     assert isinstance(cell,AbstractCell)
     self.world[i+1][j+1] = cell  
       
@@ -23,53 +32,57 @@ class Life:
     '''
     Go through the board. Count the number of living neighbors.
     '''
+
     for i in range(1,len(self.world)-1):
       for j in range(1,len(self.world[i])-1):
-        if isinstance(self.world[i][j],AbstractCell):
+        c = self.world[i][j]
+        if isinstance(c,AbstractCell):
           
-          neighbors = self.world[i][j].getNeighbors()
+          neighborsList = c.getNeighbors()
           self.neighbors = 0
           
-          if 1 in neighbors:
+          if 1 in neighborsList:
             if isinstance(self.world[i-1][j-1], AbstractCell):
               if self.world[i-1][j-1].getAlive():
                 self.neighbors += 1
-          if 2 in neighbors:
+          if 2 in neighborsList:
             if isinstance(self.world[i-1][j], AbstractCell):
               if self.world[i-1][j].getAlive():
                 self.neighbors += 1
-          if 3 in neighbors:
+          if 3 in neighborsList:
             if isinstance(self.world[i-1][j+1], AbstractCell):
               if self.world[i-1][j+1].getAlive():
                 self.neighbors += 1
-          if 4 in neighbors:
+          if 4 in neighborsList:
             if isinstance(self.world[i][j-1], AbstractCell):
               if self.world[i][j-1].getAlive():
                 self.neighbors += 1  
-          if 5 in neighbors:
+          if 5 in neighborsList:
             if isinstance(self.world[i][j+1], AbstractCell):
-              if self.world[i-1][j+1].getAlive():
+              if self.world[i][j+1].getAlive():
                 self.neighbors += 1                
-          if 6 in neighbors:
+          if 6 in neighborsList:
             if isinstance(self.world[i+1][j-1], AbstractCell):
               if self.world[i+1][j-1].getAlive():
                 self.neighbors += 1
-          if 7 in neighbors:
+          if 7 in neighborsList:
             if isinstance(self.world[i+1][j], AbstractCell):
               if self.world[i+1][j].getAlive():
                 self.neighbors += 1
-          if 8 in neighbors:
+          if 8 in neighborsList:
             if isinstance(self.world[i+1][j+1], AbstractCell):
               if self.world[i+1][j+1].getAlive():
                 self.neighbors += 1
           self.livesCount[i][j] = self.neighbors
+
+
             
     
-  def liveNeighbhors(self):
+  def liveNeighbors(self):
     '''
     Give the number of neighbhors of a living cell.
     '''
-    return self.neigbors
+    return self.neighbors
   
   def cellExecute(self, i,j):
     '''
@@ -78,13 +91,13 @@ class Life:
     c = self.world[i][j]
     self.neighbors = self.livesCount[i][j]
     if isinstance(c,AbstractCell):
-      c.evolve()
+      c.evolve(self)
     
   def populationEvolve(self):
     '''
     Goes through the world. Tells each AbstractCell to execute a generation.
     '''
-    l.countLives()
+    self.countLives()
     for i in range(1,len(self.world)-1):
       for j in range(1,len(self.world[i]) - 1):
         self.cellExecute(i,j)
@@ -98,7 +111,8 @@ class Life:
     for i in range(1,len(self.world)-1):
       for j in range(1,len(self.world[0]) - 1):
         s += str(self.world[i][j])
-      s += '\n'
+      if(i < len(self.world) - 2): 
+        s += '\n'
     return s
   
 class AbstractCell:
@@ -123,13 +137,13 @@ class AbstractCell:
     self.alive = alive
     self.neighbors = []
     
-  def getNeighbhors():
+  def getNeighbors(self):
     '''
     Return the set of neighbhors. Only called when a cell is executing.
     '''
     return self.neighbors
   
-  def getAlive(selg):
+  def getAlive(self):
     '''
     Return if cell is alive or not
     '''
@@ -147,10 +161,10 @@ class AbstractCell:
 class ConwayCell(AbstractCell):
   def __init__(self,alive = False):
     AbstractCell.__init__(self, alive)
-    self.neighbhors = [1,2,3,4,5,6,7,8]
+    self.neighbors = [1,2,3,4,5,6,7,8]
   
   def evolve(self, life):
-    u = l.giveNeighbors()
+    u = life.liveNeighbors()
     
     #if alive with less than 2 or more than 3 neigbhors make dead
     if self.alive:
@@ -161,32 +175,37 @@ class ConwayCell(AbstractCell):
       if u == 3:
         self.alive = True
 
-  def str(self):
+  def __str__(self):
     if self.alive:
       return '*'
     else:
       return '.'
     
 class FredkinCell(AbstractCell):
-  def __init__self(self,alive = False):
+  def __init__(self,alive = False):
     AbstractCell.__init__(self, alive)
-    self.age = 0   
-    self.neighbhors = [2,4,5,7]    
+    self.neighbors = [2,4,5,7]    
+    self.age = 0
   
-  def evolve(self):
-    u = l.liveNeighbors()
+  def evolve(self,life):
+    u = life.liveNeighbors()
     
-    #if live with 0, 2, or 4 live neighbhors stay alive, if 1 or 3 live neighbhors it dies
+    #if live with 0, 2, or 4 live neighbhors dies, if 1 or 3 live neighbhors stay alive
     if self.alive and u in [0,2,4]:
-      self.age += 1
-    elif self.alive:
       self.alive = False
+    elif self.alive:
+      self.age += 1
+      if(self.age == 2):
+        self.__class__ = ConwayCell
     #if dead with 1 or 3 live neighbors stay alive
     elif self.alive == False and u in [1,3]:
       self.alive = True
   
   def __str__(self):
     if self.alive:
-      return str(self.age)
+      if self.age < 10:
+        return str(self.age)
+      else:
+        return str('+')
     else:
       return '-'

@@ -13,13 +13,13 @@ class TestLife(TestCase):
   #__init__#
   def test_life__1(self):
     l = Life(0,0)
-    assert l.world == []
+    assert l.world == [['',''],['','']]
   def test_life__2(self):
     l = Life(1,1)
-    assert l.world == [['']]
+    assert l.world == [['','',''],['','',''],['','','']]
   def test_life__3(self):
     l = Life(2,2)
-    assert l.world == [['',''],['','']]
+    assert l.world == [['','','',''],['','','',''],['','','',''],['','','','']]
   
   #addCell#
   def test_life__4(self):
@@ -50,7 +50,7 @@ class TestLife(TestCase):
     l.addCell(1,0,c3)
     l.addCell(1,1,c4)
     
-    assert str(l) == '0-\n*.'
+    assert str(l) == '*.\n0-'
 
   #countLives#
   def test_life_7(self):
@@ -58,7 +58,7 @@ class TestLife(TestCase):
     c1 = ConwayCell(True)
     c2 = ConwayCell(True)
     c3 = ConwayCell(True)
-    c3 = ConwayCell(True)
+    c4 = ConwayCell(True)
     l.addCell(0,0,c1)
     l.addCell(0,1,c2)
     l.addCell(1,0,c3)
@@ -100,7 +100,7 @@ class TestLife(TestCase):
     l2.addCell(0,0,c2)
     l2.populationEvolve()
     
-    assert str(l1) == '-' and str(l2) == '.'
+    assert str(l2) == '.' and str(l1) == '-' 
     
   def test_life_11(self):
     l = Life(2,2)
@@ -114,7 +114,7 @@ class TestLife(TestCase):
     l.addCell(1,1,c4)
     l.populationEvolve()
     
-    assert str(l) == '--\n--'
+    assert str(l) == '-0\n0-'
     
   def test_life_12(self):
     l = Life(2,2)
@@ -142,7 +142,8 @@ class TestLife(TestCase):
     l.addCell(1,0,c3)
     l.addCell(1,1,c4)
     
-    assert l.liveNeighbors(0,0) == 0
+    l.cellExecute(1,1)
+    assert l.liveNeighbors() == 0
   
   def test_life_41(self):
     l = Life(2,2)
@@ -157,7 +158,8 @@ class TestLife(TestCase):
     
     l.countLives()
     
-    assert l.liveNeighbors(0,0) == 1
+    l.cellExecute(1,1)
+    assert l.liveNeighbors() == 1
     
   def test_life_42(self):
     l = Life(2,2)
@@ -171,8 +173,9 @@ class TestLife(TestCase):
     l.addCell(1,1,c4)
     
     l.countLives()
+    l.cellExecute(1,1)
     
-    assert l.liveNeighbors(1,1) == 1
+    assert l.liveNeighbors() == 1
   #============#
   #AbstractCell
   #============#
@@ -194,13 +197,13 @@ class TestLife(TestCase):
     l = Life(1,1)
     l.addCell(0,0,k)
     k.evolve(l)
-    assert k.alive
+    assert not k.alive
   def test_life_17(self):
-    k = AbstractCell()
+    k = AbstractCell(True)
     l = Life(1,1)
     l.addCell(0,0,k)
     k.evolve(l)
-    assert not k.alive
+    assert k.alive
   def test_life_18(self):
     k = AbstractCell(True)
     l = Life(1,1)
@@ -222,7 +225,7 @@ class TestLife(TestCase):
   def test_life_21(self):
     k = AbstractCell()
     l = Life(1,1)
-    l.addCell(1,1,k)
+    l.addCell(0,0,k)
     assert str(l) == '^'
     
   #===========#
@@ -238,7 +241,7 @@ class TestLife(TestCase):
     assert k.age == 0
   def test_life_24(self):
     k = FredkinCell()
-    assert k.neighbhors == [2,4,5,7]
+    assert k.neighbors == [2,4,5,7]
     
   #evolve#
   def test_life_25(self):
@@ -246,7 +249,7 @@ class TestLife(TestCase):
     l = Life(1,1)
     l.addCell(0,0,k)
     l.countLives()
-    k.evolve()
+    k.evolve(l)
     
     assert k.alive == False
     
@@ -257,7 +260,7 @@ class TestLife(TestCase):
     l.addCell(0,0,k1)
     l.addCell(1,0,k2)
     l.countLives()
-    k1.evolve()
+    k1.evolve(l)
     
     assert k1.alive == True
   def test_life_27(self):
@@ -268,7 +271,7 @@ class TestLife(TestCase):
     l.addCell(1,0,k2)
     l.countLives()
     k1.age = 1
-    k1.evolve()
+    k1.evolve(l)
         
     assert isinstance(k1,ConwayCell)    
   
@@ -296,7 +299,7 @@ class TestLife(TestCase):
     assert c.alive == False
   def test_life_32(self):
     c = ConwayCell(True)
-    assert c.alive == False
+    assert c.alive == True
   def test_life_33(self):
     c = ConwayCell()
     assert c.neighbors == [1,2,3,4,5,6,7,8]
@@ -304,46 +307,26 @@ class TestLife(TestCase):
   #evolve#
   def test_life_34(self):
     l = Life(2,2)
-    c1 = ConwayCell()
-    c2 = FredkinCell(True)
-    c3 = ConwayCell(True)
-    c4 = FredkinCell(True)
-    l.addCell(0,0,c1)
-    l.addCell(0,1,c2)
-    l.addCell(1,0,c3)
-    l.addCell(1,1,c4)
-    
-    l.countLives()
-    c1.evolve()
+    l.neighbors = 2
+    c1 = ConwayCell(True)
+    c1.evolve(l)
     
     assert c1.alive == True
     
   def test_life_35(self):
     l = Life(1,3)
-    c1 = ConwayCell(True)
-    c2 = ConwayCell(True)
-    c3 = ConwayCell(True)
-    l.addCell(0,0,c1)
-    l.addCell(0,1,c2)
-    l.addCell(0,2,c3)
+    l.neighbors = 3
+    c1 = ConwayCell()
+    c1.evolve(l)
     
-    l.countLives()
-    c3.evolve()
-    
-    assert c3.alive == False
+    assert c1.alive == True
   def test_life_36(self):
     l = Life(1,3)
-    c1 = ConwayCell(True)
-    c2 = ConwayCell(True)
-    c3 = ConwayCell(True)
-    l.addCell(0,0,c1)
-    l.addCell(0,1,c2)
-    l.addCell(0,2,c3)
+    l.neighbors = 2
+    c2 = ConwayCell()
+    c2.evolve(l)
     
-    l.countLives()
-    c2.evolve()
-    
-    assert c2.alive == True  
+    assert c2.alive == False  
   
   #getNeighbors#  
   def test_life_37(self):
